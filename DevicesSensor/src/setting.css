@@ -1,0 +1,59 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    -webkit-app-region: drag;
+    /*-webkit-app-region: no-drag;*/
+    cursor: pointer;
+    justify-content: space-between;
+    user-select: none;
+    /*padding-top: 10px;*/
+    position: relative;
+    display: flex;
+}
+
+dl dt {
+    position: relative;
+    left: 20px;
+}
+
+dl dd {
+    position:relative;
+    left: 40px;
+}
+
+button {
+    -webkit-app-region: no-drag;
+}
+
+input {
+    -webkit-app-region: no-drag;
+}
+
+dd input {
+    font-size: larger;
+}
+
+dt span {
+    font-size: x-large;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-weight: 500;
+    text-shadow: 2px 2px 2px blue;
+    color: white;
+}
+
+dd span {
+    font-size: larger;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-weight: 100;
+    text-shadow: 2px 2px 2px blue;
+    color: rgb(234, 132, 37);
+}
+h1 {
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-weight: 400;
+    text-shadow: 2px 2px 2px blue;
+    color: white;
+}

@@ -1,0 +1,55 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    -webkit-app-region: drag;
+    /*-webkit-app-region: no-drag;*/
+    cursor: pointer;
+    justify-content: space-between;
+    user-select: none;
+    /*padding-top: 10px;*/
+    position: relative;
+    display: flex;
+}
+
+button {
+    -webkit-app-region: no-drag;
+}
+
+input {
+    -webkit-app-region: no-drag;
+}
+
+p#close {
+    padding: 0px;
+    color: yellow;
+    background-color: aqua;
+    -webkit-app-region: no-drag;
+}
+
+a#setting {
+    color:black;
+    font-size: larger;
+    -webkit-app-region: no-drag;
+}
+a#setting:hover {
+    color: yellow;
+    font-size: larger;
+    -webkit-app-region: no-drag;
+}
+
+
+/*div.container {
+    padding: 0;
+    margin: 0;
+}*/
+
+span {
+    font-size: medium;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-weight: 400;
+    text-shadow: 0 0 2px blue;
+    color: white;
+}

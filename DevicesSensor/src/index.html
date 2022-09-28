@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./index.css">
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../node_modules/bootstrap-icons/font/bootstrap-icons.css">
+    <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <title>Device Sensor</title>
+</head>
+<body class="bg-secondary" >
+
+  <!--<div class="pos-f-t">
+    <div class="collapse" id="navbarToggleExternalContent">
+      <div class="bg-dark p-4">
+        <h4 class="text-white">Sensor Application</h4>
+        <span class="text-white">
+          <output></output>
+          <input type="range" style="height: 20px;" min="0.5" max="1" step="0.1" value="1"> 
+        </span>
+      </div>
+    </div>
+    <nav class="navbar navbar-dark bg-dark">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </nav>
+  </div>-->
+  
+<div class="container">
+    <div class="row align-items-center">
+      <div class="col-3">
+          <span>CPU: <a id="cpu"></a></span>
+      </div>
+      <div class="col-3">
+        <span>| GPU: <a id="gpu"></a></span>
+      </div>
+      <div class="col-3">
+        <span>| RAM: <a id="memory"></a></span>
+      </div>
+      <div class="col-3">
+        <span>| NetSpeed: <a id="Network"></a></span>
+      </div>
+    </div>
+  </div>
+
+  <a id="setting" class="bi bi-caret-up-fill"></a>
+  <!--<button class="btn btn-primary" onclick="closeApplication()">close</button>-->
+
+  <script src="./renderer.js"></script>
+</body>
+</html>
