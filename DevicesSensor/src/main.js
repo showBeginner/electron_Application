@@ -7,8 +7,12 @@ let mainWindow;
 let settingWindow;
 
 async function Handle_GPU() {
+  var GPUTemp = new Map();
   const GPU = await si.graphics();
-  console.log(GPU.controllers[0].temperatureGpu);
+  GPUTemp.set("GPUuse",(GPU.controllers[0].memoryUsed/GPU.controllers[0].memoryTotal)*100);
+  GPUTemp.set("GPUtemp",GPU.controllers[0].temperatureGpu);
+  //console.log(GPUTemp.get("GPUuse"));
+  return GPUTemp;
 }
 
 async function Handle_CPU() {
@@ -73,6 +77,7 @@ function createWindow () {
 app.whenReady().then(() => {
   createWindow();
   ipcMain.handle('system:cpu', Handle_CPU);
+  ipcMain.handle('system:gpu', Handle_GPU);
   ipcMain.handle('system:network',Handle_Network);
   ipcMain.handle('App:close', closeApp);
   ipcMain.handle('App:setting',openSetting);
