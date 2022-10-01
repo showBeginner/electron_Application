@@ -42,14 +42,22 @@ function openSetting(){
     parent: mainWindow,
     autoHideMenuBar:true,
     frame:false,
-    transparent:true,
+    //transparent:true,
     webPreferences: {
       preload: path.join(__dirname, 'setting_preload.js')
     }
   });
 
+  ipcMain.on('set:Opacity',(e,OpValue)=>{
+    mainWindow.setOpacity(Number(OpValue));
+    settingWindow.setOpacity(Number(OpValue));
+    console.log("set:Opacity: "+ OpValue);
+  });
+
   settingWindow.setOpacity(0.8);
+  //settingWindow.webContents.openDevTools();
   settingWindow.loadFile(path.join(__dirname,'setting.html'));
+
 }
 
 
@@ -81,9 +89,6 @@ app.whenReady().then(() => {
   ipcMain.handle('system:network',Handle_Network);
   ipcMain.handle('App:close', closeApp);
   ipcMain.handle('App:setting',openSetting);
-  ipcMain.on('set:Opacity',(OpValue)=>{
-    mainWindow.setOpacity(Number(OpValue));
-  });
   
   app.on('activate', () => {
     // On macOS it's common to re-create a window in the app when the
