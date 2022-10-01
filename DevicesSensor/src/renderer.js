@@ -38,6 +38,7 @@ document.addEventListener('keyup', (e) => {
     delete keyPressed[e.key];
 });*/
 
+
 async function Updatest () {
     const CPU_status = await window.api.getCPUStatus();
     const GPU_status = await window.api.getGPUStatus();
