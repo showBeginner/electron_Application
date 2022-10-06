@@ -55,9 +55,8 @@ function openSetting(){
   });
 
   settingWindow.setOpacity(0.8);
-  //settingWindow.webContents.openDevTools();
+  settingWindow.webContents.openDevTools();
   settingWindow.loadFile(path.join(__dirname,'setting.html'));
-
 }
 
 
@@ -78,7 +77,7 @@ function createWindow () {
   mainWindow.setOpacity(0.8);
   mainWindow.loadFile(path.join(__dirname ,'index.html'));
   //win.setIgnoreMouseEvents(true);
-  //mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
   //win.showInactive();
 }
 
@@ -89,6 +88,12 @@ app.whenReady().then(() => {
   ipcMain.handle('system:network',Handle_Network);
   ipcMain.handle('App:close', closeApp);
   ipcMain.handle('App:setting',openSetting);
+
+  ipcMain.on('set:sendSetting',(e,message)=>{
+    console.log("Mainjs:"+message);    
+    mainWindow.webContents.send('set:get',message);
+  });
+
   
   app.on('activate', () => {
     // On macOS it's common to re-create a window in the app when the

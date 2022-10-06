@@ -18,6 +18,10 @@ setInterval(Updatest, 3000);
 function closeApplication(){
     window.api.closeapp();
 }
+
+window.api.setget((e,message) =>{
+    console.log("mainWindow:"+message);
+});
 /*
 let rangeinput = document.querySelector("input");
     tranvalue = document.querySelector("output");
