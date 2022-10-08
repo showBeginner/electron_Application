@@ -1,17 +1,15 @@
 let rangeinput = document.querySelector('#tran');
     tranvalue = document.querySelector('output');
-let cpu = document.querySelector('#checkbox');
+let setting_Checkbox = document.querySelectorAll('[name="Setting_check"]');
 
+setting_Checkbox.forEach((element)=>{
+    element.addEventListener('input',()=>{
+        let setting_status = new Map();
+        setting_status.set(element.id,element.checked.toString());
+        window.setting_api.sendSetting(setting_status);
+    });
+});
 
-if(cpu.checked == true)
-    console.log("outside:"+ true);
-else
-    console.log("outside:"+ false);
-
-cpu.addEventListener('input',()=>{
-    window.setting_api.sendSetting(cpu.checked.toString());
-    console.log(typeof(cpu.checked));
-})
 //console.log("rangeinput.value : "+rangeinput.value);
 //tranvalue.innerText = `透明度: ${rangeinput.value}`;
 

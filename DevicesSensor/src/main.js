@@ -90,7 +90,7 @@ app.whenReady().then(() => {
   ipcMain.handle('App:setting',openSetting);
 
   ipcMain.on('set:sendSetting',(e,message)=>{
-    console.log("Mainjs:"+message);    
+    console.log("Mainjs:"+message.get("CPU_info"));    
     mainWindow.webContents.send('set:get',message);
   });
 

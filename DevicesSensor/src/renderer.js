@@ -20,7 +20,9 @@ function closeApplication(){
 }
 
 window.api.setget((e,message) =>{
-    console.log("mainWindow:"+message);
+    let setkey = message.keys();
+    let setvalue = message.values();
+    console.log(setkey.next().value+": "+setvalue.next().value);
 });
 /*
 let rangeinput = document.querySelector("input");
