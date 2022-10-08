@@ -24,14 +24,6 @@ window.api.setget((e,message) =>{
     let setvalue = message.values();
     console.log(setkey.next().value+": "+setvalue.next().value);
 });
-/*
-let rangeinput = document.querySelector("input");
-    tranvalue = document.querySelector("output");
-tranvalue.innerText = `透明度: ${rangeinput.value}`;
-rangeinput.addEventListener('input',async()=> {
-    tranvalue.innerText = `透明度: ${rangeinput.value}`;
-    window.api.setOpacity(rangeinput.value);
-},false);*/
 
 /*document.addEventListener('keydown', (e) =>{
     keyPressed[e.key] = true;
@@ -45,6 +37,7 @@ document.addEventListener('keyup', (e) => {
 });*/
 
 
+//split every system status, use remove and add setInterval method
 async function Update_sys_status () {
     const CPU_status = await window.api.getCPUStatus();
     const GPU_status = await window.api.getGPUStatus();
