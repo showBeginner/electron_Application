@@ -13,7 +13,7 @@ settingObject.addEventListener('click', ()=>{
     window.api.openSettingWindow();
 });
 
-setInterval(Updatest, 3000);
+setInterval(Update_sys_status, 3000);
 
 function closeApplication(){
     window.api.closeapp();
@@ -45,7 +45,7 @@ document.addEventListener('keyup', (e) => {
 });*/
 
 
-async function Updatest () {
+async function Update_sys_status () {
     const CPU_status = await window.api.getCPUStatus();
     const GPU_status = await window.api.getGPUStatus();
     const CPU_Use = CPU_status.get("CPUUse");
