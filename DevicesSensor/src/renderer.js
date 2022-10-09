@@ -1,4 +1,5 @@
 let keyPressed = {};
+let CPU_setting_Map = new Map();
 const network = document.getElementById("Network");
 const CPU = document.getElementById("cpu");
 const GPU = document.getElementById("gpu");
@@ -24,6 +25,32 @@ window.api.setget((e,message) =>{
     let setvalue = message.values();
     console.log(setkey.next().value+": "+setvalue.next().value);
 });
+
+//handle setting display
+function center_handle(Setting_message){
+    switch(Setting_message){
+        case 'cpu':
+            CPU_display_Setting(setting_config);
+            break;
+        case 'gpu':
+            break;
+        default:
+            break;
+    }
+}
+
+//CPU display control function
+function CPU_display_Setting(setting_config){
+    let setkey = setting_config.keys();
+    let setvalue = setting_config.values();
+    if(setvalue == false){
+        var cpu_function = window["CPU_Update"](setkey);
+        clearInterval(cpu_function);
+        return;
+    }
+    var cpu_function = window["CPU_Update"](setkey);
+    setInterval(cpu_function,3000);
+}
 
 /*document.addEventListener('keydown', (e) =>{
     keyPressed[e.key] = true;
