@@ -1,5 +1,8 @@
 let keyPressed = {};
 let CPU_setting_Map = new Map();
+CPU_setting_Map.set("CPU_info",false);
+CPU_setting_Map.set("CPU_Temp",false);
+CPU_setting_Map.set("CPU_Usage",false);
 const network = document.getElementById("Network");
 const CPU = document.getElementById("cpu");
 const GPU = document.getElementById("gpu");
@@ -14,7 +17,7 @@ settingObject.addEventListener('click', ()=>{
     window.api.openSettingWindow();
 });
 
-setInterval(Update_sys_status, 3000);
+//setInterval(Update_sys_status, 3000);
 
 function closeApplication(){
     window.api.closeapp();
@@ -23,33 +26,32 @@ function closeApplication(){
 window.api.setget((e,message) =>{
     let setkey = message.keys();
     let setvalue = message.values();
-    console.log(setkey.next().value+": "+setvalue.next().value);
+    CPU_setting_Map.set(setkey.next().value,setvalue.next().value);
 });
 
-//handle setting display
-function center_handle(Setting_message){
-    switch(Setting_message){
-        case 'cpu':
-            CPU_display_Setting(setting_config);
-            break;
-        case 'gpu':
-            break;
-        default:
-            break;
-    }
-}
-
-//CPU display control function
-function CPU_display_Setting(setting_config){
-    let setkey = setting_config.keys();
-    let setvalue = setting_config.values();
-    if(setvalue == false){
-        var cpu_function = window["CPU_Update"](setkey);
-        clearInterval(cpu_function);
-        return;
-    }
-    var cpu_function = window["CPU_Update"](setkey);
-    setInterval(cpu_function,3000);
+//cpu update function working
+async function CPU_update(){
+	if (CPU_setting_Map.get("CPU_info") == true){
+		document.getElementById("cpuinfo").style.display = "block";
+		const CPU_status = await window.api.getCPUStatus();
+        const CPU_Use = CPU_status.get("CPUUse");
+        const CPU_temp = CPU_status.get("CPUTemp");
+		document.getElementById("cpu").innerText = ` ${CPU_Use.toFixed(1)}%,${CPU_temp}℃ `;
+		return;
+	}
+	if(!CPU_setting_Map.get("CPU_Temp") && 
+        !CPU_setting_Map.get("CPU_Usage")){
+		document.getElementById("cpuinfo").style.display = "none";
+		return;
+	}
+	document.getElementById("cpuinfo").style.display = "block";
+    const CPU_status = await window.api.getCPUStatus();
+	let display = CPU_setting_Map.get("CPU_Temp") == false ? 
+            new Map([[CPU_status.get("CPUUse").toFixed(1),'%']]) : new Map([[CPU_status.get("CPUTemp"),"℃"]]);
+    let setkey = display.keys();
+    let setvalue = display.values();
+    //console.log("key:"+setkey.next().value+" value:"+setvalue.next().value);
+	document.getElementById("cpu").innerText = `${setkey.next().value}${setvalue.next().value}`;
 }
 
 /*document.addEventListener('keydown', (e) =>{

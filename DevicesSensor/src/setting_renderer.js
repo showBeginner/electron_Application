@@ -5,7 +5,7 @@ let setting_Checkbox = document.querySelectorAll('[name="Setting_check"]');
 setting_Checkbox.forEach((element)=>{
     element.addEventListener('input',()=>{
         let setting_status = new Map();
-        setting_status.set(element.id,element.checked.toString());
+        setting_status.set(element.id,element.checked);
         window.setting_api.sendSetting(setting_status);
     });
 });
