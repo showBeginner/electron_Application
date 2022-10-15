@@ -8,9 +8,9 @@ let setting_status = new Map();
 setting_Checkbox.forEach((element)=>{
     element.addEventListener('input',()=>{
         setting_status.set(element.id,element.checked);
-        if(element.id.test(re_CPU))
+        if(re_CPU.test(element.id))
             CPU_display();
-        else if(element.id.test(re_GPU))
+        else if(re_GPU.test(element.id))
             GPU_display();
         else
             other();
@@ -19,27 +19,53 @@ setting_Checkbox.forEach((element)=>{
 });
 
 function CPU_display(){
-    if(setting_status.get("CPU_info")){
-        document.getElementById("CPU_Temp").disabled = true;
-        document.getElementById("CPU_Usage").disabled = true;
-        document.getElementById("CPU_Temp").checked = true;
-        document.getElementById("CPU_Usage").checked= true;
+    let info = document.getElementById("CPU_info");
+	let Temp = document.getElementById("CPU_Temp");
+	let Usage = document.getElementById("CPU_Usage");
+    if(info.checked || (Temp.checked && Usage.checked)){
+        setting_status.set("CPU_info",true);
+        setting_status.set("CPU_Temp",false);
+        setting_status.set("CPU_Usage",false);
+		info.checked = true;
+		Temp.checked = false;
+		Usage.checked = false;
+		Temp.disabled  = true;
+		Usage.disabled = true;
+		return;
+    }
+	else if(!info.checked){
+        setting_status.set("CPU_info",false);
+        setting_status.set("CPU_Temp",false);
+        setting_status.set("CPU_Usage",false);
+		Temp.disabled  = false;
+		Usage.disabled = false;
         return;
-    }
-    else{
-        document.getElementById("CPU_Temp").checked = false;
-        document.getElementById("CPU_Usage").checked= false;
-        setting_status.set("CPU_Temp",false);
-        setting_status.set("CPU_Temp",false);
-    }
-    if(setting_status.get("CPU_Temp")&&setting_status.get("CPU_Usage")){
-        document.getElementById("CPU_Temp").disabled = false;
-        document.getElementById("CPU_Usage").disabled = false;
-    }
+	}
 }
 
 function GPU_display(){
-
+    let info = document.getElementById("GPU_info");
+	let Temp = document.getElementById("GPU_Temp");
+	let Usage = document.getElementById("GPU_Usage");
+    if(info.checked || (Temp.checked && Usage.checked)){
+        setting_status.set("CPU_info",true);
+        setting_status.set("CPU_Temp",false);
+        setting_status.set("CPU_Usage",false);
+		info.checked = true;
+		Temp.checked = false;
+		Usage.checked = false;
+		Temp.disabled  = true;
+		Usage.disabled = true;
+		return;
+    }
+	else if(!info.checked){
+        setting_status.set("CPU_info",false);
+        setting_status.set("CPU_Temp",false);
+        setting_status.set("CPU_Usage",false);
+		Temp.disabled  = false;
+		Usage.disabled = false;
+        return;
+	}
 }
 
 function other(){

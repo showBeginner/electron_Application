@@ -18,19 +18,25 @@ settingObject.addEventListener('click', ()=>{
 });
 
 //setInterval(Update_sys_status, 3000);
+setInterval(CPU_update,3000);
 
 function closeApplication(){
     window.api.closeapp();
 }
 
 window.api.setget((e,message) =>{
-    let setkey = message.keys();
-    let setvalue = message.values();
-    CPU_setting_Map.set(setkey.next().value,setvalue.next().value);
+    message.forEach((value,key) => {
+        console.log(key +": "+value);
+        CPU_setting_Map.set(key,value);
+    });
+    //CPU_setting_Map.set(setkey.next().value,setvalue.next().value);
 });
 
 //cpu update function working
 async function CPU_update(){
+    CPU_setting_Map.forEach((value,key) => {
+        console.log(key +": "+value);
+    });
 	if (CPU_setting_Map.get("CPU_info") == true){
 		document.getElementById("cpuinfo").style.display = "block";
 		const CPU_status = await window.api.getCPUStatus();
