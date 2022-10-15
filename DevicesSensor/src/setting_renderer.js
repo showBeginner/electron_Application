@@ -33,7 +33,7 @@ function CPU_display(){
 		Usage.disabled = true;
 		return;
     }
-	else if(!info.checked){
+	if(!info.checked && (!Temp.checked && !Usage.checked)){
         setting_status.set("CPU_info",false);
         setting_status.set("CPU_Temp",false);
         setting_status.set("CPU_Usage",false);
@@ -58,7 +58,7 @@ function GPU_display(){
 		Usage.disabled = true;
 		return;
     }
-	else if(!info.checked){
+	else if(!info.checked && (!Temp.checked && !Usage.checked)){
         setting_status.set("CPU_info",false);
         setting_status.set("CPU_Temp",false);
         setting_status.set("CPU_Usage",false);

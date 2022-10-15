@@ -1,8 +1,11 @@
 let keyPressed = {};
+
+//read setting config json file
 let CPU_setting_Map = new Map();
 CPU_setting_Map.set("CPU_info",false);
 CPU_setting_Map.set("CPU_Temp",false);
 CPU_setting_Map.set("CPU_Usage",false);
+
 const network = document.getElementById("Network");
 const CPU = document.getElementById("cpu");
 const GPU = document.getElementById("gpu");
@@ -34,9 +37,9 @@ window.api.setget((e,message) =>{
 
 //cpu update function working
 async function CPU_update(){
-    CPU_setting_Map.forEach((value,key) => {
+    /*CPU_setting_Map.forEach((value,key) => {
         console.log(key +": "+value);
-    });
+    });*/
 	if (CPU_setting_Map.get("CPU_info") == true){
 		document.getElementById("cpuinfo").style.display = "block";
 		const CPU_status = await window.api.getCPUStatus();
