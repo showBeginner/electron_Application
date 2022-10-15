@@ -7,7 +7,7 @@ let mainWindow;
 let settingWindow;
 
 async function Handle_GPU() {
-  var GPUTemp = new Map();
+  let GPUTemp = new Map();
   const GPU = await si.graphics();
   GPUTemp.set("GPUuse",(GPU.controllers[0].memoryUsed/GPU.controllers[0].memoryTotal)*100);
   GPUTemp.set("GPUtemp",GPU.controllers[0].temperatureGpu);
@@ -16,7 +16,7 @@ async function Handle_GPU() {
 }
 
 async function Handle_CPU() {
-  var systemSta = new Map();
+  let systemSta = new Map();
   const usage = await si.currentLoad();
   const Temperature = await si.cpuTemperature();
   /*const GPU = await si.graphics();
@@ -27,7 +27,12 @@ async function Handle_CPU() {
 }
 
 async function Handle_Network() {
+  let system_network = new Map();
   const network= await si.networkInterfaces('default');
+  const ping = await si.inetLatency();
+  system_network.set("speed",network['speed']);
+  system_network.set("ping",ping);
+  //console.log("network(default): "+network+"\n");
   return network['speed'];
 }
 
