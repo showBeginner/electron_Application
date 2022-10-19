@@ -13,7 +13,7 @@ setting_Checkbox.forEach((element)=>{
         else if(re_GPU.test(element.id))
             GPU_display();
         else
-            other();
+            other(element.id);
         window.setting_api.sendSetting(setting_status);
     });
 });
@@ -68,8 +68,20 @@ function GPU_display(){
 	}
 }
 
-function other(){
-
+function other(elementid){
+    let inputed_object = document.getElementById(elementid);
+    let value = inputed_object.checked === true? true:false;
+    switch(elementid){
+	case 'Ram':
+	    setting_status.set("Ram",value);
+	    break;
+	case 'Net':
+	    setting_status.set("Net",value);
+	    break;
+	default:
+	    setting_status.set("FPS",value);
+	    break;
+    }
 }
 
 //console.log("rangeinput.value : "+rangeinput.value);
