@@ -86,9 +86,9 @@ async function Net_update(){
 		document.getElementById("Net").display = "none";
 		return;
 	}
-	const Net_object = document.getElementById("Net"); 
-	Net_object.display = "block";
-	const net_data = await window.api.getNet();
+	const Net_object = document.getElementById("Network"); 
+	document.getElementById("Net").display = "block";
+	const net_data = await window.api.getNetworkStatus();
 	Net_object.innerText = ` ${net_data.get("speed")}Mbit/s ,${net_data("ping")} ms`;
 }
 
@@ -97,8 +97,8 @@ async function ram_update(){
 		document.getElementById("Ram").display = "none";
 		return;
 	}
-	const Ram_object = document.getElementById("Ram");
-	Ram_object.display = "block";
+	const Ram_object = document.getElementById("memory");
+	document.getElementById("Ram").display = "block";
 	const ram_data =  await window.api.getRam();
 	Ram_object.innerText = `${ram_data}%`;
 }

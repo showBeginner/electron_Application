@@ -33,7 +33,7 @@ async function Handle_Network() {
   system_network.set("speed",network['speed']);
   system_network.set("ping",ping);
   //console.log("network(default): "+network+"\n");
-  return network['speed'];
+  return system_network;
 }
 
 function closeApp(){
