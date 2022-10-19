@@ -81,6 +81,28 @@ async function GPU_update(){
 	document.getElementById("gpu").innerText = `${setkey.next().value}${setvalue.next().value}`;
 }
 
+async function Net_update(){
+	if(!Setting_config_map.get("Net")){
+		document.getElementById("Net").display = "none";
+		return;
+	}
+	const Net_object = document.getElementById("Net"); 
+	Net_object.display = "block";
+	const net_data = await window.api.getNet();
+	Net_object.innerText = ` ${net_data.get("speed")}Mbit/s ,${net_data("ping")} ms`;
+}
+
+async function ram_update(){
+	if(!Setting_config_map.get("Ram")){
+		document.getElementById("Ram").display = "none";
+		return;
+	}
+	const Ram_object = document.getElementById("Ram");
+	Ram_object.display = "block";
+	const ram_data =  await window.api.getRam();
+	Ram_object.innerText = `${ram_data}%`;
+}
+
 /*document.addEventListener('keydown', (e) =>{
     keyPressed[e.key] = true;
     if(keyPressed['Control'] && e.key == 'a'){
