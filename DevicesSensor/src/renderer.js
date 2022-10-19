@@ -22,7 +22,7 @@ settingObject.addEventListener('click', ()=>{
     window.api.closeapp();
 }*/
 
-window.api.setget((e,message) =>{
+window.api.setconfig((e,message) =>{
     message.forEach((value,key) => {
         //console.log(key +": "+value);
         Setting_config_map.set(key,value);
