@@ -15,6 +15,12 @@ async function Handle_GPU() {
   return GPUTemp;
 }
 
+async function Handle_FPS(){
+  let FPS_map = new Map();
+  const FPS = await si.graphics();
+  FPS_map.set("FPS",FPS.displays[0].currentRefreshRate);
+}
+
 async function Handle_CPU() {
   let systemSta = new Map();
   const usage = await si.currentLoad();
@@ -91,8 +97,10 @@ app.whenReady().then(() => {
   ipcMain.handle('system:cpu', Handle_CPU);
   ipcMain.handle('system:gpu', Handle_GPU);
   ipcMain.handle('system:network',Handle_Network);
+  ipcMain.handle('system:fps',Handle_FPS);
   ipcMain.handle('App:close', closeApp);
   ipcMain.handle('App:setting',openSetting);
+  
 
   ipcMain.on('set:sendSetting',(e,message)=>{
     /*message.forEach((value,key) => {
