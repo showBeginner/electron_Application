@@ -12,7 +12,7 @@ const GPU = document.getElementById("gpu");
 const settingObject = document.getElementById("setting");
 
 
-setInterval(CPU_update,3000);
+setInterval(ram_update,3000);
 setInterval(GPU_update,3000);
 settingObject.addEventListener('click', ()=>{
     window.api.openSettingWindow();
@@ -101,6 +101,17 @@ async function ram_update(){
 	document.getElementById("Ram").display = "block";
 	const ram_data =  await window.api.getRam();
 	Ram_object.innerText = `${ram_data}%`;
+}
+
+async function FPS_Update(){
+    if(!Setting_config_map.get("FPS")){
+	document.getElementById("FPS").display = "none";
+	return;
+    }
+    const FPS_display = document.getElementById("FPS_dis");
+    document.getElementById("FPS").display = "block";
+    const FPS_data = await window.api.getFPS();
+    FPS_display.innerText = ` ${FPS_data}ms`;
 }
 
 /*document.addEventListener('keydown', (e) =>{

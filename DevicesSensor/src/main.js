@@ -16,9 +16,8 @@ async function Handle_GPU() {
 }
 
 async function Handle_FPS(){
-  let FPS_map = new Map();
   const FPS = await si.graphics();
-  FPS_map.set("FPS",FPS.displays[0].currentRefreshRate);
+  return FPS.displays[0].currentRefreshRate;
 }
 
 async function Handle_CPU() {
@@ -30,6 +29,13 @@ async function Handle_CPU() {
   systemSta.set("CPUUse",usage.currentLoad);
   systemSta.set("CPUTemp",Temperature.main);
   return systemSta;
+}
+
+async function Handle_RAM() {
+  const Ram_data = await si.mem();
+  const data_total = Ram_data.total;
+  const data_use = Ram_data.used;
+  return ((data_use/data_total)*100).toFixed(1);
 }
 
 async function Handle_Network() {
@@ -98,6 +104,7 @@ app.whenReady().then(() => {
   ipcMain.handle('system:gpu', Handle_GPU);
   ipcMain.handle('system:network',Handle_Network);
   ipcMain.handle('system:fps',Handle_FPS);
+  ipcMain.handle('system:RAM',Handle_RAM);
   ipcMain.handle('App:close', closeApp);
   ipcMain.handle('App:setting',openSetting);
   
