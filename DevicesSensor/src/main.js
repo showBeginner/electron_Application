@@ -15,6 +15,13 @@ async function Handle_GPU() {
   return GPUTemp;
 }
 
+function close_setting(){
+  settingWindow.close();
+  if(!settingWindow.isDestroyed())
+    settingWindow.destroy();
+  
+}
+
 async function Handle_FPS(){
   const FPS = await si.graphics();
   return FPS.displays[0].currentRefreshRate;
@@ -64,7 +71,7 @@ function openSetting(){
       preload: path.join(__dirname, 'setting_preload.js')
     }
   });
-
+  
   ipcMain.on('set:Opacity',(e,OpValue)=>{
     mainWindow.setOpacity(Number(OpValue));
     settingWindow.setOpacity(Number(OpValue));
@@ -107,6 +114,7 @@ app.whenReady().then(() => {
   ipcMain.handle('system:RAM',Handle_RAM);
   ipcMain.handle('App:close', closeApp);
   ipcMain.handle('App:setting',openSetting);
+  ipcMain.handle('set:closeSetting',close_setting);
   
 
   ipcMain.on('set:sendSetting',(e,message)=>{

@@ -5,6 +5,10 @@ const re_CPU = new RegExp('CPU_*');
 const re_GPU = new RegExp('GPU_*');
 let setting_status = new Map();
 
+document.getElementById('close').addEventListener('click',()=>{
+    window.setting_api.closeSetting();
+});
+
 setting_Checkbox.forEach((element)=>{
     element.addEventListener('input',()=>{
         setting_status.set(element.id,element.checked);
