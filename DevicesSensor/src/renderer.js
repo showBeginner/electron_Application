@@ -82,33 +82,33 @@ async function GPU_update(){
 
 async function Net_update(){
 	if(!Setting_config_map.get("Net")){
-		document.getElementById("Net").display = "none";
+		document.getElementById("Net").style.display = "none";
 		return;
 	}
 	const Net_object = document.getElementById("Network"); 
-	document.getElementById("Net").display = "block";
+	document.getElementById("Net").style.display = "block";
 	const net_data = await window.api.getNetworkStatus();
 	Net_object.innerText = ` ${net_data.get("speed")}Mbit/s ,${net_data("ping")} ms`;
 }
 
 async function ram_update(){
 	if(!Setting_config_map.get("Ram")){
-		document.getElementById("Ram").display = "none";
+		document.getElementById("Ram").style.display = "none";
 		return;
 	}
 	const Ram_object = document.getElementById("memory");
-	document.getElementById("Ram").display = "block";
+	document.getElementById("Ram").style.display = "block";
 	const ram_data =  await window.api.getRam();
 	Ram_object.innerText = `${ram_data}%`;
 }
 
 async function FPS_Update(){
     if(!Setting_config_map.get("FPS")){
-	document.getElementById("FPS").display = "none";
-	return;
+		document.getElementById("FPS").style.display = "none";
+		return;
     }
     const FPS_display = document.getElementById("FPS_dis");
-    document.getElementById("FPS").display = "block";
+    document.getElementById("FPS").style.display = "block";
     const FPS_data = await window.api.getFPS();
     FPS_display.innerText = ` ${FPS_data}ms`;
 }
