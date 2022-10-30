@@ -7,6 +7,7 @@ contextBridge.exposeInMainWorld("api", {
   getFPS: ()=> ipcRenderer.invoke('system:fps'),
   getRam: ()=> ipcRenderer.invoke('system:RAM'),
   closeapp: () =>  ipcRenderer.invoke('App:close'),
+  getConfig: (config) => ipcRenderer.on('pass-config',config),
   openSettingWindow: () => ipcRenderer.invoke('App:setting'),
   setconfig: (message) => ipcRenderer.on('set:get', message)
 });

@@ -1,10 +1,22 @@
 const { app, BrowserWindow,  ipcMain } = require('electron');
 const si  = require("systeminformation");
 const path = require('path');
+const fs  = require('fs');
 
 
 let mainWindow;
 let settingWindow;
+let config = new Map();
+
+fs.readFile('./config.json', 'utf8', (err, jsonstring) => {
+  if(err){
+    console.log("File read failed:",err);
+    return;
+  }
+  jsonstring.forEach((data,index) =>{
+    config.set(index,data)
+  });
+});
 
 async function Handle_GPU() {
   let GPUTemp = new Map();
@@ -117,6 +129,7 @@ app.whenReady().then(() => {
   ipcMain.handle('set:closeSetting',close_setting);
   
 
+  mainWindow.webContent.send('pass-config',config);
   ipcMain.on('set:sendSetting',(e,message)=>{
     /*message.forEach((value,key) => {
       console.log(key +": "+value);
