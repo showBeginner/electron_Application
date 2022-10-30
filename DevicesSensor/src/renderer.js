@@ -2,6 +2,11 @@ let keyPressed = {};
 
 //read setting config json file
 let Setting_config_map = new Map();
+window.api.getConfig((e,config_set) => {
+    config_set.forEach((value,key) => {
+        Setting_config_map.set(key,value);
+    });
+});
 
 const network = document.getElementById("Network");
 const CPU = document.getElementById("cpu");
