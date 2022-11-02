@@ -1,21 +1,41 @@
 const { app, BrowserWindow,  ipcMain } = require('electron');
 const si  = require("systeminformation");
 const path = require('path');
-const fs  = require('fs');
+const { writeFile, readFile, access, constants } = require('fs');
 
 
 let mainWindow;
 let settingWindow;
-let config = new Map();
+let config = new Map([
+	["CPU_info",false],
+	["CPU_Temp",false],
+	["CPU_Usage",false],
+	["GPU_info",false],
+	["GPU_Temp",false],
+	["GPU_Usage",false],
+	["Net",false],
+	["Ram",false],
+	["FPS",false],
+]);
 
-fs.readFile('./config.json', 'utf8', (err, jsonstring) => {
-  if(err){
-    console.log("File read failed:",err);
-    return;
-  }
-  jsonstring.forEach((data,index) =>{
-    config.set(index,data)
-  });
+access('./config.json',constants_F_OK, (err) => {
+
+	if(err){
+		writeFile('./config.json', json, (err) => {
+			if (err) throw err;
+			console.log("Completed");
+		});
+		return;
+	}
+	readFile('./config.json', 'utf8', (err, jsonstring) => {
+	  if(err){
+      console.log("File read failed:",err);
+      return;
+	  }
+	  jsonstring.forEach((data,index) =>{
+		  config.set(index,data);
+	  });
+	});
 });
 
 async function Handle_GPU() {
