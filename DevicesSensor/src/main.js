@@ -19,7 +19,7 @@ let config = new Map([
 ]);
 
 access('./config.json',constants_F_OK, (err) => {
-
+  const json = JSON.stringify(Object.fromEntries(config));
 	if(err){
 		writeFile('./config.json', json, (err) => {
 			if (err) throw err;
@@ -167,6 +167,11 @@ app.whenReady().then(() => {
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
+    const json = JSON.stringify(Object.fromEntries(config));
+    writeFile('./config.json', json, (err) => {
+			if (err) throw err;
+			console.log("Completed");
+		});
     app.quit();
   }
 });
