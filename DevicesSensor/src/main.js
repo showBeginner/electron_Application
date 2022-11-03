@@ -1,7 +1,8 @@
 const { app, BrowserWindow,  ipcMain } = require('electron');
 const si  = require("systeminformation");
 const path = require('path');
-const { writeFile, readFile, access, constants } = require('fs');
+const fs = require('fs');
+const fsPromises = fs.promises;
 
 
 let mainWindow;
@@ -18,25 +19,18 @@ let config = new Map([
 	["FPS",false],
 ]);
 
-access('./config.json',constants_F_OK, (err) => {
-  const json = JSON.stringify(Object.fromEntries(config));
-	if(err){
-		writeFile('./config.json', json, (err) => {
-			if (err) throw err;
-			console.log("Completed");
-		});
-		return;
-	}
-	readFile('./config.json', 'utf8', (err, jsonstring) => {
-	  if(err){
-      console.log("File read failed:",err);
-      return;
-	  }
-	  jsonstring.forEach((data,index) =>{
-		  config.set(index,data);
-	  });
-	});
-});
+fsPromises.access('package.json', fs.constants.F_OK)
+.then(async () => { 
+	const avc = await fsPromises.readFile("./package.json",'utf8')
+		.then((result) => {
+			console.log("readFile",result);
+			return result;
+		})
+		.catch(() => console.error('can not readFile'));
+	let config = new Map(Object.entries(JSON.parse(avc)));
+	console.log("access type:",typeof(avc));
+})
+.catch(() => console.error('can not be accessed'));
 
 async function Handle_GPU() {
   let GPUTemp = new Map();
@@ -168,7 +162,7 @@ app.whenReady().then(() => {
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     const json = JSON.stringify(Object.fromEntries(config));
-    writeFile('./config.json', json, (err) => {
+    fsPromises.writeFile('./config.json', json, (err) => {
 			if (err) throw err;
 			console.log("Completed");
 		});
