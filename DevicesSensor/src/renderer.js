@@ -110,10 +110,10 @@ async function ram_update(){
 }
 
 async function FPS_Update(){
-    if(!Setting_config_map.get("FPS")){
+	if(!Setting_config_map.get("FPS")){
 		document.getElementById("FPS").style.display = "none";
 		return;
-    }
+	}
 	const FPS_display = document.getElementById("FPS_dis");
 	document.getElementById("FPS").style.display = "block";
 	const FPS_data = await window.api.getFPS();
