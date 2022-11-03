@@ -19,6 +19,13 @@ let config = new Map([
 	["FPS",false],
 ]);
 
+async function setup_handleFunction(){
+  await setup_config();
+  mainWindow.webContent.send('pass-config',config);
+}
+
+
+
 const setup_config = async() => {
   await fsPromises.access('config.json', fs.constants.F_OK)
   .then(async () => { 
@@ -34,7 +41,7 @@ const setup_config = async() => {
   .catch(() => console.error('can not be accessed'));
 }
 
-setup_config();
+
 
 
 async function Handle_GPU() {
@@ -138,6 +145,7 @@ function createWindow () {
 
 app.whenReady().then(() => {
   createWindow();
+  setup_handleFunction();
   ipcMain.handle('system:cpu', Handle_CPU);
   ipcMain.handle('system:gpu', Handle_GPU);
   ipcMain.handle('system:network',Handle_Network);
@@ -148,7 +156,7 @@ app.whenReady().then(() => {
   ipcMain.handle('set:closeSetting',close_setting);
   
 
-  mainWindow.webContent.send('pass-config',config);
+  
   ipcMain.on('set:sendSetting',(e,message)=>{
     /*message.forEach((value,key) => {
       console.log(key +": "+value);
