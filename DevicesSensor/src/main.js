@@ -19,9 +19,9 @@ let config = new Map([
 	["FPS",false],
 ]);
 
-fsPromises.access('package.json', fs.constants.F_OK)
+fsPromises.access('config.json', fs.constants.F_OK)
 .then(async () => { 
-	const avc = await fsPromises.readFile("./package.json",'utf8')
+	const avc = await fsPromises.readFile("./config.json",'utf8')
 		.then((result) => {
 			console.log("readFile",result);
 			return result;
