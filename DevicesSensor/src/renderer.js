@@ -41,8 +41,8 @@ async function CPU_update(){
 	if (Setting_config_map.get("CPU_info") == true){
 		document.getElementById("cpuinfo").style.display = "block";
 		const CPU_status = await window.api.getCPUStatus();
-        const CPU_Use = CPU_status.get("CPUUse");
-        const CPU_temp = CPU_status.get("CPUTemp");
+		const CPU_Use = CPU_status.get("CPUUse");
+		const CPU_temp = CPU_status.get("CPUTemp");
 		document.getElementById("cpu").innerText = ` ${CPU_Use.toFixed(1)}%,${CPU_temp}℃ `;
 		return;
 	}
@@ -52,11 +52,12 @@ async function CPU_update(){
 		return;
 	}
 	document.getElementById("cpuinfo").style.display = "block";
-    const CPU_status = await window.api.getCPUStatus();
+	const CPU_status = await window.api.getCPUStatus();
 	let display = Setting_config_map.get("CPU_Temp") == false ? 
             new Map([[CPU_status.get("CPUUse").toFixed(1),'%']]) : new Map([[CPU_status.get("CPUTemp"),"℃"]]);
-    let setkey = display.keys();
-    let setvalue = display.values();
+    
+	let setkey = display.keys();
+	let setvalue = display.values();
     //console.log("key:"+setkey.next().value+" value:"+setvalue.next().value);
 	document.getElementById("cpu").innerText = `${setkey.next().value}${setvalue.next().value}`;
 }
@@ -65,8 +66,8 @@ async function GPU_update(){
     if (Setting_config_map.get("GPU_info") == true){
 		document.getElementById("gpuinfo").style.display = "block";
 		const GPU_status = await window.api.getCPUStatus();
-        const GPU_Use = GPU_status.get("GPUUse");
-        const GPU_temp = GPU_status.get("GPUTemp");
+		const GPU_Use = GPU_status.get("GPUUse");
+		const GPU_temp = GPU_status.get("GPUTemp");
 		document.getElementById("gpu").innerText = ` ${GPU_Use.toFixed(1)}%,${GPU_temp}℃ `;
 		return;
 	}
@@ -76,11 +77,12 @@ async function GPU_update(){
 		return;
 	}
 	document.getElementById("gpuinfo").style.display = "block";
-    const GPU_status = await window.api.getCPUStatus();
+	const GPU_status = await window.api.getCPUStatus();
 	let display = Setting_config_map.get("GPU_Temp") == false ? 
             new Map([[GPU_status.get("GPUUse").toFixed(1),'%']]) : new Map([[GPU_status.get("GPUTemp"),"℃"]]);
-    let setkey = display.keys();
-    let setvalue = display.values();
+   
+	let setkey = display.keys();
+	let setvalue = display.values();
     //console.log("key:"+setkey.next().value+" value:"+setvalue.next().value);
 	document.getElementById("gpu").innerText = `${setkey.next().value}${setvalue.next().value}`;
 }
@@ -112,10 +114,10 @@ async function FPS_Update(){
 		document.getElementById("FPS").style.display = "none";
 		return;
     }
-    const FPS_display = document.getElementById("FPS_dis");
-    document.getElementById("FPS").style.display = "block";
-    const FPS_data = await window.api.getFPS();
-    FPS_display.innerText = ` ${FPS_data}ms`;
+	const FPS_display = document.getElementById("FPS_dis");
+	document.getElementById("FPS").style.display = "block";
+	const FPS_data = await window.api.getFPS();
+	FPS_display.innerText = ` ${FPS_data}ms`;
 }
 
 /*document.addEventListener('keydown', (e) =>{
