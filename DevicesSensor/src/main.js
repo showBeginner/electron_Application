@@ -19,18 +19,23 @@ let config = new Map([
 	["FPS",false],
 ]);
 
-fsPromises.access('config.json', fs.constants.F_OK)
-.then(async () => { 
-	const avc = await fsPromises.readFile("./config.json",'utf8')
-		.then((result) => {
-			console.log("readFile",result);
-			return result;
-		})
-		.catch(() => console.error('can not readFile'));
-	let config = new Map(Object.entries(JSON.parse(avc)));
-	console.log("access type:",typeof(avc));
-})
-.catch(() => console.error('can not be accessed'));
+const setup_config = async() => {
+  await fsPromises.access('config.json', fs.constants.F_OK)
+  .then(async () => { 
+    const avc = await fsPromises.readFile("./config.json",'utf8')
+      .then((result) => {
+        console.log("readFile",result);
+        return result;
+      })
+      .catch(() => console.error('can not readFile'));
+    config = new Map(Object.entries(JSON.parse(avc)));
+    console.log("access type:",typeof(avc));
+  })
+  .catch(() => console.error('can not be accessed'));
+}
+
+setup_config();
+
 
 async function Handle_GPU() {
   let GPUTemp = new Map();
