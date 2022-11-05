@@ -6,6 +6,7 @@ window.api.getConfig((e,config_set) => {
     config_set.forEach((value,key) => {
         Setting_config_map.set(key,value);
     });
+	console.log("Load setting:",Setting_config_map);
 });
 
 const network = document.getElementById("Network");
@@ -28,7 +29,7 @@ settingObject.addEventListener('click', ()=>{
 
 window.api.setconfig((e,message) =>{
     message.forEach((value,key) => {
-        console.log(key +": "+value);
+        //console.log(key +": "+value);
         Setting_config_map.set(key,value);
     });
 });
@@ -77,10 +78,10 @@ async function GPU_update(){
 		return;
 	}
 	document.getElementById("gpuinfo").style.display = "block";
-	const GPU_status = await window.api.getCPUStatus();
+	const GPU_status = await window.api.getGPUStatus();
 	let display = Setting_config_map.get("GPU_Temp") == false ? 
             new Map([[GPU_status.get("GPUuse").toFixed(1),'%']]) : new Map([[GPU_status.get("GPUtemp"),"℃"]]);
-   
+
 	let setkey = display.keys();
 	let setvalue = display.values();
     //console.log("key:"+setkey.next().value+" value:"+setvalue.next().value);
@@ -95,7 +96,7 @@ async function Net_update(){
 	const Net_object = document.getElementById("Network"); 
 	document.getElementById("Net").style.display = "block";
 	const net_data = await window.api.getNetworkStatus();
-	Net_object.innerText = ` ${net_data.get("speed")}Mbit/s ,${net_data("ping")} ms`;
+	Net_object.innerText = ` ${net_data.get("speed")}Mbit/s ,${net_data.get("ping")} ms`;
 }
 
 async function ram_update(){

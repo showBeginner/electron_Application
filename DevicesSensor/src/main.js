@@ -21,7 +21,7 @@ let config = new Map([
 
 async function setup_handleFunction(){
   await setup_config();
-  mainWindow.webContent.send('pass-config',config);
+  mainWindow.webContents.send('pass-config',config);
 }
 
 
@@ -44,6 +44,7 @@ const setup_config = async() => {
 			if (err) throw err;
 			console.log("Completed");
 		});
+    console.log("access catch\n");
   });
 }
 
@@ -140,7 +141,7 @@ function createWindow () {
     }
   });
 
-
+  setup_handleFunction();
   mainWindow.setOpacity(0.8);
   mainWindow.loadFile(path.join(__dirname ,'index.html'));
   //win.setIgnoreMouseEvents(true);
@@ -150,7 +151,6 @@ function createWindow () {
 
 app.whenReady().then(() => {
   createWindow();
-  setup_handleFunction();
   ipcMain.handle('system:cpu', Handle_CPU);
   ipcMain.handle('system:gpu', Handle_GPU);
   ipcMain.handle('system:network',Handle_Network);
