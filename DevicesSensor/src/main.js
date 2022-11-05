@@ -38,7 +38,13 @@ const setup_config = async() => {
     config = new Map(Object.entries(JSON.parse(avc)));
     console.log("access type:",typeof(avc));
   })
-  .catch(() => console.error('can not be accessed'));
+  .catch(() => {
+    const json = JSON.stringify(Object.fromEntries(config));
+    fsPromises.writeFile('./config.json', json, (err) => {
+			if (err) throw err;
+			console.log("Completed");
+		});
+  });
 }
 
 
@@ -49,7 +55,6 @@ async function Handle_GPU() {
   const GPU = await si.graphics();
   GPUTemp.set("GPUuse",(GPU.controllers[0].memoryUsed/GPU.controllers[0].memoryTotal)*100);
   GPUTemp.set("GPUtemp",GPU.controllers[0].temperatureGpu);
-  //console.log(GPUTemp.get("GPUuse"));
   return GPUTemp;
 }
 

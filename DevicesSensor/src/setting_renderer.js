@@ -52,9 +52,9 @@ function GPU_display(){
 	let Temp = document.getElementById("GPU_Temp");
 	let Usage = document.getElementById("GPU_Usage");
     if(info.checked || (Temp.checked && Usage.checked)){
-        setting_status.set("CPU_info",true);
-        setting_status.set("CPU_Temp",false);
-        setting_status.set("CPU_Usage",false);
+        setting_status.set("GPU_info",true);
+        setting_status.set("GPU_Temp",false);
+        setting_status.set("GPU_Usage",false);
 		info.checked = true;
 		Temp.checked = false;
 		Usage.checked = false;
@@ -63,9 +63,9 @@ function GPU_display(){
 		return;
     }
 	else if(!info.checked && (!Temp.checked && !Usage.checked)){
-        setting_status.set("CPU_info",false);
-        setting_status.set("CPU_Temp",false);
-        setting_status.set("CPU_Usage",false);
+        setting_status.set("GPU_info",false);
+        setting_status.set("GPU_Temp",false);
+        setting_status.set("GPU_Usage",false);
 		Temp.disabled  = false;
 		Usage.disabled = false;
         return;

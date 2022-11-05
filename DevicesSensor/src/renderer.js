@@ -28,7 +28,7 @@ settingObject.addEventListener('click', ()=>{
 
 window.api.setconfig((e,message) =>{
     message.forEach((value,key) => {
-        //console.log(key +": "+value);
+        console.log(key +": "+value);
         Setting_config_map.set(key,value);
     });
 });
@@ -65,9 +65,9 @@ async function CPU_update(){
 async function GPU_update(){
     if (Setting_config_map.get("GPU_info") == true){
 		document.getElementById("gpuinfo").style.display = "block";
-		const GPU_status = await window.api.getCPUStatus();
-		const GPU_Use = GPU_status.get("GPUUse");
-		const GPU_temp = GPU_status.get("GPUTemp");
+		const GPU_status = await window.api.getGPUStatus();
+		const GPU_Use = GPU_status.get("GPUuse");
+		const GPU_temp = GPU_status.get("GPUtemp");
 		document.getElementById("gpu").innerText = ` ${GPU_Use.toFixed(1)}%,${GPU_temp}℃ `;
 		return;
 	}
@@ -79,7 +79,7 @@ async function GPU_update(){
 	document.getElementById("gpuinfo").style.display = "block";
 	const GPU_status = await window.api.getCPUStatus();
 	let display = Setting_config_map.get("GPU_Temp") == false ? 
-            new Map([[GPU_status.get("GPUUse").toFixed(1),'%']]) : new Map([[GPU_status.get("GPUTemp"),"℃"]]);
+            new Map([[GPU_status.get("GPUuse").toFixed(1),'%']]) : new Map([[GPU_status.get("GPUtemp"),"℃"]]);
    
 	let setkey = display.keys();
 	let setvalue = display.values();
