@@ -56,6 +56,7 @@ async function Handle_GPU() {
   const GPU = await si.graphics();
   GPUTemp.set("GPUuse",(GPU.controllers[0].memoryUsed/GPU.controllers[0].memoryTotal)*100);
   GPUTemp.set("GPUtemp",GPU.controllers[0].temperatureGpu);
+  console.log("Call GPU");
   return GPUTemp;
 }
 
@@ -68,6 +69,7 @@ function close_setting(){
 
 async function Handle_FPS(){
   const FPS = await si.graphics();
+  console.log("Call FPS");
   return FPS.displays[0].currentRefreshRate;
 }
 
@@ -79,6 +81,7 @@ async function Handle_CPU() {
   console.log(GPU.displays[0]);*/
   systemSta.set("CPUUse",usage.currentLoad);
   systemSta.set("CPUTemp",Temperature.main);
+  console.log("Call CPU");
   return systemSta;
 }
 
@@ -86,6 +89,7 @@ async function Handle_RAM() {
   const Ram_data = await si.mem();
   const data_total = Ram_data.total;
   const data_use = Ram_data.used;
+  console.log("Call Ram");
   return ((data_use/data_total)*100).toFixed(1);
 }
 
@@ -95,7 +99,7 @@ async function Handle_Network() {
   const ping = await si.inetLatency();
   system_network.set("speed",network['speed']);
   system_network.set("ping",ping);
-  //console.log("network(default): "+network+"\n");
+  console.log("Call network");
   return system_network;
 }
 
@@ -141,7 +145,7 @@ function createWindow () {
     }
   });
 
-  setup_handleFunction();
+  //setup_handleFunction();
   mainWindow.setOpacity(0.8);
   mainWindow.loadFile(path.join(__dirname ,'index.html'));
   //win.setIgnoreMouseEvents(true);
@@ -179,11 +183,11 @@ app.whenReady().then(() => {
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
-    const json = JSON.stringify(Object.fromEntries(config));
+    /*const json = JSON.stringify(Object.fromEntries(config));
     fsPromises.writeFile('./config.json', json, (err) => {
 			if (err) throw err;
 			console.log("Completed");
-		});
+		});*/
     app.quit();
   }
 });
