@@ -50,7 +50,10 @@ const setup_config = async() => {
   });
 }
 
+function Handle_Center(){
 
+	Handle_CPU();
+}
 
 
 function Handle_CPU(){
