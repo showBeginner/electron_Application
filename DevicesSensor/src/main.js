@@ -19,6 +19,8 @@ let config = new Map([
 	["FPS",false],
 ]);
 
+console.log("test git branch");
+
 async function setup_handleFunction(){
   await setup_config();
   mainWindow.webContents.send('pass-config',config);
