@@ -53,13 +53,16 @@ const setup_config = async() => {
 
 
 
-async function Handle_GPU() {
-  let GPUTemp = new Map();
-  const GPU = await si.graphics();
-  GPUTemp.set("GPUuse",(GPU.controllers[0].memoryUsed/GPU.controllers[0].memoryTotal)*100);
-  GPUTemp.set("GPUtemp",GPU.controllers[0].temperatureGpu);
-  console.log("Call GPU");
-  return GPUTemp;
+function Handle_CPU(){
+	if(config.get("CPU_info") == true){
+		si.currentLoad().then( data => {
+			mainWindow.webContents.send('pass-cpuUsage', data.currentLoad);
+		});
+		si.cpuTemperature().then( data => {
+			mainWindow.webContents.send('pass-cpuTemp', data.main);
+		});
+		return;	
+	}
 }
 
 function close_setting(){
