@@ -14,11 +14,7 @@ const CPU = document.getElementById("cpu");
 const GPU = document.getElementById("gpu");
 const settingObject = document.getElementById("setting");
 
-setInterval(CPU_update,3000);
-setInterval(ram_update,3000);
-setInterval(GPU_update,3000);
-setInterval(Net_update,3000);
-setInterval(FPS_Update,3000);
+
 settingObject.addEventListener('click', ()=>{
     window.api.openSettingWindow();
 });
