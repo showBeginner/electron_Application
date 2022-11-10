@@ -51,21 +51,35 @@ const setup_config = async() => {
 }
 
 function Handle_Center(){
-
-	Handle_CPU();
+	if(config.get("CPU_info") || (config.get("CPU_Temp") || config.get("CPU_Usage") ))
+		Handle_CPU();
+  
+  if(config.get("GPU_info") || (config.get("GPU_Temp") || config.get("GPU_Usage") ))
+		Handle_GPU();
 }
 
 
-function Handle_CPU(){
-	if(config.get("CPU_info") == true){
-		si.currentLoad().then( data => {
-			mainWindow.webContents.send('pass-cpuUsage', data.currentLoad);
-		});
-		si.cpuTemperature().then( data => {
-			mainWindow.webContents.send('pass-cpuTemp', data.main);
-		});
+async function Handle_CPU(){
+  if(config.get("CPU_info") == true){
+		const usage = await si.currentLoad();
+		const temperature = await si.cpuTemperature();
+		let cpu_array = [usage.currentLoad,temperature.main];
+		mainWindow.webContents.send('pass-cpu',cpu_array);	
 		return;	
 	}
+
+}
+
+async function Handle_GPU(){
+  if(config.get("GPU_info") == true){
+    si.graphics().then(data => {
+      let display_default = data.controllers[0];
+      let usage = ((display_default.memoryUsed/display_default.memoryTotal)*100).toFixed(1);
+      let temp = display_default.temperatureGpu;
+      let gpu_array = [usage,temp];
+      mainWindow.webContents.send('pass-gpu',gpu_array);
+    });
+  }
 }
 
 function close_setting(){
@@ -81,17 +95,6 @@ async function Handle_FPS(){
   return FPS.displays[0].currentRefreshRate;
 }
 
-async function Handle_CPU() {
-  let systemSta = new Map();
-  const usage = await si.currentLoad();
-  const Temperature = await si.cpuTemperature();
-  /*const GPU = await si.graphics();
-  console.log(GPU.displays[0]);*/
-  systemSta.set("CPUUse",usage.currentLoad);
-  systemSta.set("CPUTemp",Temperature.main);
-  console.log("Call CPU");
-  return systemSta;
-}
 
 async function Handle_RAM() {
   const Ram_data = await si.mem();
@@ -163,17 +166,7 @@ function createWindow () {
 
 app.whenReady().then(() => {
   createWindow();
-  ipcMain.handle('system:cpu', Handle_CPU);
-  ipcMain.handle('system:gpu', Handle_GPU);
-  ipcMain.handle('system:network',Handle_Network);
-  ipcMain.handle('system:fps',Handle_FPS);
-  ipcMain.handle('system:RAM',Handle_RAM);
-  ipcMain.handle('App:close', closeApp);
-  ipcMain.handle('App:setting',openSetting);
-  ipcMain.handle('set:closeSetting',close_setting);
-  
 
-  
   ipcMain.on('set:sendSetting',(e,message)=>{
     /*message.forEach((value,key) => {
       console.log(key +": "+value);
