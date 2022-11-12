@@ -1,14 +1,13 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld("api", {
-  getCPUStatus: () => ipcRenderer.invoke('system:cpu'),
-  getGPUStatus: () => ipcRenderer.invoke('system:gpu'),
-  getNetworkStatus: () =>ipcRenderer.invoke('system:network'),
-  getFPS: ()=> ipcRenderer.invoke('system:fps'),
-  getRam: ()=> ipcRenderer.invoke('system:RAM'),
+  getCPUStatus: (cpu_array) => ipcRenderer.on('pass-cpu',cpu_array),
+  getGPUStatus: (gpu_array) => ipcRenderer.on('pass-gpu',gpu_array),
+  getNetworkStatus: (net_array) =>ipcRenderer.on('pass-net',net_array),
+  getFPS: (FPS_array)=> ipcRenderer.invoke('pass-FPS',FPS_array),
+  getRam: (ram_array)=> ipcRenderer.invoke('pass-ram',ram_array),
   closeapp: () =>  ipcRenderer.invoke('App:close'),
   getConfig: (config) => ipcRenderer.on('pass-config',config),
   openSettingWindow: () => ipcRenderer.invoke('App:setting'),
   setconfig: (message) => ipcRenderer.on('set:get', message)
 });
-  

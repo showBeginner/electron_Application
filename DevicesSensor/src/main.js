@@ -52,34 +52,23 @@ const setup_config = async() => {
 }
 
 function Handle_Center(){
-	if(config.get("CPU_info") || (config.get("CPU_Temp") || config.get("CPU_Usage") ))
-		Handle_CPU();
+  console.log("132156465");
+  //if(config.get("CPU_info") || (config.get("CPU_Temp") || config.get("CPU_Usage") ))
+		//Handle_CPU();
   
-  if(config.get("GPU_info") || (config.get("GPU_Temp") || config.get("GPU_Usage") ))
-		Handle_GPU();
+  //if(config.get("GPU_info") || (config.get("GPU_Temp") || config.get("GPU_Usage") ))
+	//	Handle_GPU();
+
 }
 
 
 function Handle_CPU(){
-  if(config.get("CPU_info") == true){
     Promise.all([si.currentLoad(), si.cpuTemperature()]).then(function(results) {
+      console.log("cpu in promise");
       let cpu_array = [(results[0].currentLoad).toFixed(1),results[1].main];
 		  mainWindow.webContents.send('pass-cpu',cpu_array);
     });
-		return;	
-	}
-  if(config.get("CPU_Usage")){
-    Promise.resolve(si.currentLoad()).then( value => {
-      let cpu_array = [(value.currentLoad).toFixed(1)];
-      mainWindow.webContents.send('pass-cpu',cpu_array);
-    });
-  }
-  else{
-    Promise.resolve(si.cpuTemperature()).then( value => {
-      let cpu_array = [value.main];
-      mainWindow.webContents.send('pass-cpu',cpu_array);
-    });
-  }
+	
 }
 
 function Handle_GPU(){
@@ -118,29 +107,29 @@ function close_setting(){
   
 }
 
-async function Handle_FPS(){
-  const FPS = await si.graphics();
-  console.log("Call FPS");
-  return FPS.displays[0].currentRefreshRate;
+function Handle_FPS(){
+  si.graphics().then(data => {
+    let FPS_array = [data.displays[0].currentRefreshRate];
+    mainWindow.webContents.send('pass-FPS',FPS_array);
+  });
 }
 
 
-async function Handle_RAM() {
-  const Ram_data = await si.mem();
-  const data_total = Ram_data.total;
-  const data_use = Ram_data.used;
-  console.log("Call Ram");
-  return ((data_use/data_total)*100).toFixed(1);
+function Handle_RAM() {
+  Promise.resolve(si.mem()).then(result => {
+    const data_total = result.total;
+    const data_use = result.used;
+    let ram_array = [((data_use/data_total)*100).toFixed(1)];
+    mainWindow.webContents.send('pass-ram',ram_array);
+  });
 }
 
-async function Handle_Network() {
-  let system_network = new Map();
-  const network= await si.networkInterfaces('default');
-  const ping = await si.inetLatency();
-  system_network.set("speed",network['speed']);
-  system_network.set("ping",ping);
-  console.log("Call network");
-  return system_network;
+function Handle_Network() {
+  Promise.all(si.networkInterfaceDefault('default'),si.inetLatency())
+  .then(results =>{
+    let net_array = [results[0]['speed'],results[1]];
+    mainWindow.webContents.send('pass-net',net_array);
+  });
 }
 
 function closeApp(){
@@ -185,7 +174,7 @@ function createWindow () {
     }
   });
 
-  //setup_handleFunction();
+  setup_handleFunction();
   mainWindow.setOpacity(0.8);
   mainWindow.loadFile(path.join(__dirname ,'index.html'));
   //win.setIgnoreMouseEvents(true);
@@ -195,7 +184,7 @@ function createWindow () {
 
 app.whenReady().then(() => {
   createWindow();
-  setInterval(Handle_Center,5000);
+  
   ipcMain.handle('App:setting',openSetting);
   ipcMain.on('set:sendSetting',(e,message)=>{
     /*message.forEach((value,key) => {
