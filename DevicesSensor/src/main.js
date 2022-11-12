@@ -2,7 +2,7 @@ const { app, BrowserWindow,  ipcMain } = require('electron');
 const si  = require("systeminformation");
 const path = require('path');
 const fs = require('fs');
-const { setInterval } = require('timers/promises');
+//const { setInterval } = require('timers/promises');
 const fsPromises = fs.promises;
 
 
@@ -12,7 +12,7 @@ let config = new Map([
 	["CPU_info",false],
 	["CPU_Temp",false],
 	["CPU_Usage",false],
-	["GPU_info",false],
+	["GPU_info",true],
 	["GPU_Temp",false],
 	["GPU_Usage",false],
 	["Net",false],
@@ -26,7 +26,6 @@ async function setup_handleFunction(){
   await setup_config();
   mainWindow.webContents.send('pass-config',config);
 }
-
 
 
 const setup_config = async() => {
@@ -52,32 +51,49 @@ const setup_config = async() => {
 }
 
 function Handle_Center(){
-  console.log("132156465");
-  //if(config.get("CPU_info") || (config.get("CPU_Temp") || config.get("CPU_Usage") ))
-		//Handle_CPU();
+  console.log("Center");
+  if(config.get("CPU_info") || (config.get("CPU_Temp") || config.get("CPU_Usage") ))
+		Handle_CPU();
   
-  //if(config.get("GPU_info") || (config.get("GPU_Temp") || config.get("GPU_Usage") ))
-	//	Handle_GPU();
+  if(config.get("GPU_info") || (config.get("GPU_Temp") || config.get("GPU_Usage") ))
+		Handle_GPU();
 
 }
 
 
 function Handle_CPU(){
+
+  if(config.get("CPU_info")){
     Promise.all([si.currentLoad(), si.cpuTemperature()]).then(function(results) {
-      console.log("cpu in promise");
       let cpu_array = [(results[0].currentLoad).toFixed(1),results[1].main];
 		  mainWindow.webContents.send('pass-cpu',cpu_array);
     });
+		return;
+  }
+  if(config.get("CPU_Usage")){
+    Promise.resolve(si.currentLoad()).then( result => {
+      let cpu_array = [(result.currentLoad).toFixed(1)];
+      mainWindow.webContents.send('pass-cpu',cpu_array);
+    });
+  }
+  else{
+    Promise.resolve(si.cpuTemperature()).then( result => {
+      let cpu_array = [result.main];
+      mainWindow.webContents.send('pass-cpu',cpu_array);
+    });
+  }
 	
 }
 
 function Handle_GPU(){
+  console.log("GPU_info",config.get("GPU_info"));
   if(config.get("GPU_info") == true){
-    si.graphics().then(data => {
+    Promise.resolve(si.graphics()).then(data => {
       let display_default = data.controllers[0];
       let usage = ((display_default.memoryUsed/display_default.memoryTotal)*100).toFixed(1);
       let temp = display_default.temperatureGpu;
       let gpu_array = [usage,temp];
+      console.log("gpu:",temp);
       mainWindow.webContents.send('pass-gpu',gpu_array);
     });
     return;
@@ -184,7 +200,11 @@ function createWindow () {
 
 app.whenReady().then(() => {
   createWindow();
-  
+  //setInterval(Handle_CPU,5000);
+  //setInterval(Handle_GPU,5000);
+  console.time('js');
+  Handle_GPU();
+  console.timeEnd('js');
   ipcMain.handle('App:setting',openSetting);
   ipcMain.on('set:sendSetting',(e,message)=>{
     /*message.forEach((value,key) => {

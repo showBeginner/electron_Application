@@ -30,12 +30,12 @@ window.api.setconfig((e,message) =>{
 
 window.api.getCPUStatus((e,cpu_array) => {
 	const CPU = document.getElementById("cpu");
-	console.log("cpu_array:",cpu_array);
 	CPU.innerText = `${cpu_array[0]}% ,${cpu_array[1]}℃`;
 });
 
 window.api.getGPUStatus((e,gpu_array) => {
 	const GPU = document.getElementById("gpu");
+	console.log("gpu_array",gpu_array);
 	GPU.innerText = `${gpu_array[0]}% ,${gpu_array[1]}℃`;
 });
 
