@@ -45,11 +45,11 @@ window.api.getNetworkStatus((e,net_array) => {
 });
 
 window.api.getFPS((e,FPS_array) => {
-	const fps = document.getElementById("FPS");
-	fps.innerText = `${FPS_array[0]}ms`;
+	const fps = document.getElementById("FPS_dis");
+	fps.innerText = `${FPS_array[0]} ms`;
 });
 
 window.api.getRam((e,ram_array) => {
-	const ram = document.getElementById("Ram");
+	const ram = document.getElementById("memory");
 	ram.innerText = `${ram_array[0]}% `;
 });

@@ -86,14 +86,14 @@ function Handle_CPU(){
 }
 
 function Handle_GPU(){
-  console.log("GPU_info",config.get("GPU_info"));
   if(config.get("GPU_info") == true){
     Promise.resolve(si.graphics()).then(data => {
       let display_default = data.controllers[0];
       let usage = ((display_default.memoryUsed/display_default.memoryTotal)*100).toFixed(1);
       let temp = display_default.temperatureGpu;
       let gpu_array = [usage,temp];
-      console.log("gpu:",temp);
+      let FPS_array = [data.displays[0].currentRefreshRate];
+      mainWindow.webContents.send('pass-FPS',FPS_array);
       mainWindow.webContents.send('pass-gpu',gpu_array);
     });
     return;
@@ -141,7 +141,7 @@ function Handle_RAM() {
 }
 
 function Handle_Network() {
-  Promise.all(si.networkInterfaceDefault('default'),si.inetLatency())
+  Promise.all([si.networkInterfaces('default'),si.inetLatency()])
   .then(results =>{
     let net_array = [results[0]['speed'],results[1]];
     mainWindow.webContents.send('pass-net',net_array);
@@ -194,17 +194,20 @@ function createWindow () {
   mainWindow.setOpacity(0.8);
   mainWindow.loadFile(path.join(__dirname ,'index.html'));
   //win.setIgnoreMouseEvents(true);
-  mainWindow.webContents.openDevTools();
+  //mainWindow.webContents.openDevTools();
   //win.showInactive();
 }
 
 app.whenReady().then(() => {
   createWindow();
-  //setInterval(Handle_CPU,5000);
-  //setInterval(Handle_GPU,5000);
-  console.time('js');
+  setInterval(Handle_CPU,6000);
+  //setInterval(Handle_FPS,10000);
+  setInterval(Handle_RAM,8000);
+  setInterval(Handle_Network,4000);
+  setInterval(Handle_GPU,15000);
+  /*console.time('js');
   Handle_GPU();
-  console.timeEnd('js');
+  console.timeEnd('js');*/
   ipcMain.handle('App:setting',openSetting);
   ipcMain.on('set:sendSetting',(e,message)=>{
     /*message.forEach((value,key) => {
