@@ -2,6 +2,7 @@ const { app, BrowserWindow,  ipcMain } = require('electron');
 const si  = require("systeminformation");
 const path = require('path');
 const fs = require('fs');
+//const { setInterval } = require('timers/promises');
 const fsPromises = fs.promises;
 
 
@@ -11,7 +12,7 @@ let config = new Map([
 	["CPU_info",false],
 	["CPU_Temp",false],
 	["CPU_Usage",false],
-	["GPU_info",false],
+	["GPU_info",true],
 	["GPU_Temp",false],
 	["GPU_Usage",false],
 	["Net",false],
@@ -19,11 +20,12 @@ let config = new Map([
 	["FPS",false],
 ]);
 
+
+
 async function setup_handleFunction(){
   await setup_config();
   mainWindow.webContents.send('pass-config',config);
 }
-
 
 
 const setup_config = async() => {
@@ -48,15 +50,70 @@ const setup_config = async() => {
   });
 }
 
+function Handle_Center(){
+  console.log("Center");
+  if(config.get("CPU_info") || (config.get("CPU_Temp") || config.get("CPU_Usage") ))
+		Handle_CPU();
+  
+  if(config.get("GPU_info") || (config.get("GPU_Temp") || config.get("GPU_Usage") ))
+		Handle_GPU();
+
+}
 
 
+function Handle_CPU(){
 
-async function Handle_GPU() {
-  let GPUTemp = new Map();
-  const GPU = await si.graphics();
-  GPUTemp.set("GPUuse",(GPU.controllers[0].memoryUsed/GPU.controllers[0].memoryTotal)*100);
-  GPUTemp.set("GPUtemp",GPU.controllers[0].temperatureGpu);
-  return GPUTemp;
+  if(config.get("CPU_info")){
+    Promise.all([si.currentLoad(), si.cpuTemperature()]).then(function(results) {
+      let cpu_array = [(results[0].currentLoad).toFixed(1),results[1].main];
+		  mainWindow.webContents.send('pass-cpu',cpu_array);
+    });
+		return;
+  }
+  if(config.get("CPU_Usage")){
+    Promise.resolve(si.currentLoad()).then( result => {
+      let cpu_array = [(result.currentLoad).toFixed(1)];
+      mainWindow.webContents.send('pass-cpu',cpu_array);
+    });
+  }
+  else{
+    Promise.resolve(si.cpuTemperature()).then( result => {
+      let cpu_array = [result.main];
+      mainWindow.webContents.send('pass-cpu',cpu_array);
+    });
+  }
+	
+}
+
+function Handle_GPU(){
+  if(config.get("GPU_info") == true){
+    Promise.resolve(si.graphics()).then(data => {
+      let display_default = data.controllers[0];
+      let usage = ((display_default.memoryUsed/display_default.memoryTotal)*100).toFixed(1);
+      let temp = display_default.temperatureGpu;
+      let gpu_array = [usage,temp];
+      let FPS_array = [data.displays[0].currentRefreshRate];
+      mainWindow.webContents.send('pass-FPS',FPS_array);
+      mainWindow.webContents.send('pass-gpu',gpu_array);
+    });
+    return;
+  }
+  if(config.get("GPU_Usage")){
+    si.graphics().then(data => {
+      let display_default = data.controllers[0];
+      let usage = ((display_default.memoryUsed/display_default.memoryTotal)*100).toFixed(1);
+      let gpu_array = [usage];
+      mainWindow.webContents.send('pass-gpu',gpu_array);
+    });
+  }
+  else{
+    si.graphics().then(data => {
+      let display_default = data.controllers[0];
+      let temp = display_default.temperatureGpu;
+      let gpu_array = [temp];
+      mainWindow.webContents.send('pass-gpu',gpu_array);
+    });
+  }
 }
 
 function close_setting(){
@@ -66,37 +123,29 @@ function close_setting(){
   
 }
 
-async function Handle_FPS(){
-  const FPS = await si.graphics();
-  return FPS.displays[0].currentRefreshRate;
+function Handle_FPS(){
+  si.graphics().then(data => {
+    let FPS_array = [data.displays[0].currentRefreshRate];
+    mainWindow.webContents.send('pass-FPS',FPS_array);
+  });
 }
 
-async function Handle_CPU() {
-  let systemSta = new Map();
-  const usage = await si.currentLoad();
-  const Temperature = await si.cpuTemperature();
-  /*const GPU = await si.graphics();
-  console.log(GPU.displays[0]);*/
-  systemSta.set("CPUUse",usage.currentLoad);
-  systemSta.set("CPUTemp",Temperature.main);
-  return systemSta;
+
+function Handle_RAM() {
+  Promise.resolve(si.mem()).then(result => {
+    const data_total = result.total;
+    const data_use = result.used;
+    let ram_array = [((data_use/data_total)*100).toFixed(1)];
+    mainWindow.webContents.send('pass-ram',ram_array);
+  });
 }
 
-async function Handle_RAM() {
-  const Ram_data = await si.mem();
-  const data_total = Ram_data.total;
-  const data_use = Ram_data.used;
-  return ((data_use/data_total)*100).toFixed(1);
-}
-
-async function Handle_Network() {
-  let system_network = new Map();
-  const network= await si.networkInterfaces('default');
-  const ping = await si.inetLatency();
-  system_network.set("speed",network['speed']);
-  system_network.set("ping",ping);
-  //console.log("network(default): "+network+"\n");
-  return system_network;
+function Handle_Network() {
+  Promise.all([si.networkInterfaces('default'),si.inetLatency()])
+  .then(results =>{
+    let net_array = [results[0]['speed'],results[1]];
+    mainWindow.webContents.send('pass-net',net_array);
+  });
 }
 
 function closeApp(){
@@ -145,23 +194,21 @@ function createWindow () {
   mainWindow.setOpacity(0.8);
   mainWindow.loadFile(path.join(__dirname ,'index.html'));
   //win.setIgnoreMouseEvents(true);
-  mainWindow.webContents.openDevTools();
+  //mainWindow.webContents.openDevTools();
   //win.showInactive();
 }
 
 app.whenReady().then(() => {
   createWindow();
-  ipcMain.handle('system:cpu', Handle_CPU);
-  ipcMain.handle('system:gpu', Handle_GPU);
-  ipcMain.handle('system:network',Handle_Network);
-  ipcMain.handle('system:fps',Handle_FPS);
-  ipcMain.handle('system:RAM',Handle_RAM);
-  ipcMain.handle('App:close', closeApp);
+  setInterval(Handle_CPU,6000);
+  //setInterval(Handle_FPS,10000);
+  setInterval(Handle_RAM,8000);
+  setInterval(Handle_Network,4000);
+  setInterval(Handle_GPU,15000);
+  /*console.time('js');
+  Handle_GPU();
+  console.timeEnd('js');*/
   ipcMain.handle('App:setting',openSetting);
-  ipcMain.handle('set:closeSetting',close_setting);
-  
-
-  
   ipcMain.on('set:sendSetting',(e,message)=>{
     /*message.forEach((value,key) => {
       console.log(key +": "+value);
@@ -179,11 +226,11 @@ app.whenReady().then(() => {
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
-    const json = JSON.stringify(Object.fromEntries(config));
+    /*const json = JSON.stringify(Object.fromEntries(config));
     fsPromises.writeFile('./config.json', json, (err) => {
 			if (err) throw err;
 			console.log("Completed");
-		});
+		});*/
     app.quit();
   }
 });
